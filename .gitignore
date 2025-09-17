@@ -32,6 +32,9 @@
 # Arquivos de Configuração
 # =========================
 .env
+.env.local
+.env.*.local
+*.secret
 application-*.yml
 application-*.properties
 
