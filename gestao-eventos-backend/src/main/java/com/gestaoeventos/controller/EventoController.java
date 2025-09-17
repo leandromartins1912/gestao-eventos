@@ -30,5 +30,50 @@ public class EventoController {
         return service.listarEventos(page, size);
     }
 
-   
+    @Operation(summary = "Busca evento por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Evento encontrado"),
+        @ApiResponse(responseCode = "404", description = "Evento não encontrado")
+    })
+    @GetMapping("/{id}")
+    public EventoDTO getEvento(
+        @Parameter(description = "ID do evento", required = true) @PathVariable Long id) {
+        return service.buscarPorId(id);
+    }
+
+    @Operation(summary = "Cria um novo evento")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Evento criado"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
+    @PostMapping
+    public EventoDTO createEvento(
+        @Parameter(description = "Dados do evento", required = true) @Valid @RequestBody EventoDTO dto) {
+        return service.criarEvento(dto);
+    }
+
+    @Operation(summary = "Atualiza um evento existente")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Evento atualizado"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+        @ApiResponse(responseCode = "404", description = "Evento não encontrado")
+    })
+    @PutMapping("/{id}")
+    public EventoDTO updateEvento(
+        @Parameter(description = "ID do evento", required = true) @PathVariable Long id,
+        @Parameter(description = "Dados do evento", required = true) @Valid @RequestBody EventoDTO dto) {
+        return service.atualizarEvento(id, dto);
+    }
+
+    @Operation(summary = "Remove um evento")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Evento removido"),
+        @ApiResponse(responseCode = "404", description = "Evento não encontrado")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvento(
+        @Parameter(description = "ID do evento", required = true) @PathVariable Long id) {
+        service.removerEvento(id);
+        return ResponseEntity.noContent().build();
+    }
 }

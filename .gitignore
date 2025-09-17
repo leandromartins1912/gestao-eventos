@@ -1,0 +1,64 @@
+# =========================
+# Angular / Node
+# =========================
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.angular/
+/frontend/coverage/
+/frontend/.tmp/
+/frontend/.cache/
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+/frontend/pnpm-debug.log*
+
+# =========================
+# Java / Spring Boot
+# =========================
+/backend/target/
+/backend/build/
+/backend/out/
+/backend/.gradle/
+/backend/.mvn/
+
+# =========================
+# Logs
+# =========================
+*.log
+*.out
+*.err
+
+# =========================
+# Arquivos de Configuração
+# =========================
+.env
+application-*.yml
+application-*.properties
+
+# =========================
+# IDEs (IntelliJ, Eclipse, VSCode)
+# =========================
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+bin/
+/.vscode/
+/frontend/*.code-workspace
+
+# =========================
+# Sistema Operacional
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Outros temporários
+# =========================
+*.swp
+*.swo
+*.bak
+*.tmp

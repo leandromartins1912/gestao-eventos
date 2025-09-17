@@ -35,8 +35,7 @@ public class EventoService {
         return toDTO(repository.save(evento));
     }
 
-    public EventoDTO atualizarEvento(Long id, EventoDTO dto) {
-    	
+    public EventoDTO atualizarEvento(Long id, EventoDTO dto) {    	
         Evento evento = repository.findById(id)
             .filter(e -> !e.getDeleted())
             .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado"));
