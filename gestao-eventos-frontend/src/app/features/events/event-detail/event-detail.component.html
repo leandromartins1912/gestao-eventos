@@ -1,0 +1,11 @@
+<mat-card *ngIf="event">
+  <mat-card-title>{{ event.title }}</mat-card-title>
+  <mat-card-subtitle>{{ event.eventDatetime | date:'dd/MM/yyyy HH:mm' }}</mat-card-subtitle>
+  <mat-card-content>
+    <p>{{ event.description }}</p>
+    <p><strong>Local:</strong> {{ event.location }}</p>
+  </mat-card-content>
+  <button mat-button color="primary" (click)="voltarLista()">
+  ← Voltar para a lista
+  </button>
+</mat-card>

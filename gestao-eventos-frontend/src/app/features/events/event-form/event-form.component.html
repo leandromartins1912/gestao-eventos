@@ -1,0 +1,39 @@
+<div class="form-container">
+  <h2>{{ editMode ? 'Atualizar Evento' : 'Novo Evento' }}</h2>
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Título</mat-label>
+    <input matInput formControlName="title" />
+    <mat-error *ngIf="form.get('title')?.invalid">Título é obrigatório</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Descrição</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+    <mat-error *ngIf="form.get('description')?.invalid">Descrição é obrigatória</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Local</mat-label>
+    <input matInput formControlName="location" />
+    <mat-error *ngIf="form.get('location')?.invalid">Local é obrigatório</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Data e Hora do Evento</mat-label>
+    <input matInput type="datetime-local" formControlName="eventDatetime" />
+    <mat-error *ngIf="form.get('eventDatetime')?.invalid">Data e hora são obrigatórios</mat-error>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+    {{ editMode ? 'Atualizar' : 'Criar' }} Evento
+  </button>
+
+</form>
+</div>
+

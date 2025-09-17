@@ -1,0 +1,35 @@
+<app-spinner *ngIf="loading"></app-spinner>
+<div class="list-container">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="!loading">
+    <ng-container matColumnDef="title">
+  <th mat-header-cell *matHeaderCellDef> Título </th>
+  <td mat-cell *matCellDef="let event"> {{ event.title }} </td>
+</ng-container>
+
+<ng-container matColumnDef="eventDatetime">
+  <th mat-header-cell *matHeaderCellDef> Data </th>
+  <td mat-cell *matCellDef="let event"> {{ event.eventDatetime | date:'dd/MM/yyyy HH:mm' }} </td>
+</ng-container>
+
+<ng-container matColumnDef="location">
+  <th mat-header-cell *matHeaderCellDef> Local </th>
+  <td mat-cell *matCellDef="let event"> {{ event.location }} </td>
+</ng-container>
+
+<ng-container matColumnDef="actions">
+  <th mat-header-cell *matHeaderCellDef> Editar </th>
+  <td mat-cell *matCellDef="let event">
+    <button mat-icon-button color="primary" (click)="editEvent(event.id)">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </td>
+</ng-container>
+
+<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+<tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navegarParaDetalhes(row.id)"></tr>
+
+  </table>
+  <mat-paginator [length]="total" [pageSize]="size" (page)="onPageChange($event)"></mat-paginator>
+</div>
+
+

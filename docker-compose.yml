@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: eventos-db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - eventos-network
+
+  backend:
+    build:
+      context: ./gestao-eventos-backend
+      dockerfile: Dockerfile
+    container_name: eventos-backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - eventos-network
+
+  frontend:
+    container_name: eventos-frontend
+    build:
+      context: ./gestao-eventos-frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    networks:
+      - eventos-network
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+
+networks:
+  eventos-network:
+    driver: bridge
