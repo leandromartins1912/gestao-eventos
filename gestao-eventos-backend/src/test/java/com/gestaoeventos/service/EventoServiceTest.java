@@ -1,39 +1,67 @@
 package com.gestaoeventos.service;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import com.gestaoeventos.dto.EventoDTO;
+import com.gestaoeventos.exception.ResourceNotFoundException;
 import com.gestaoeventos.model.Evento;
 import com.gestaoeventos.repository.EventoRepository;
 
-@SpringBootTest
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 public class EventoServiceTest {
 
-	@Mock
+    @Mock
     private EventoRepository repository;
 
     @InjectMocks
     private EventoService service;
 
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    public void deveriaRetornarEventoPorId() {
-        Evento evento = new Evento(1L, "Titulo", "Descrição", LocalDateTime.now());
+    void deveBuscarEventoPorId() {
+        Evento evento = new Evento();
+        evento.setId(1L);
+        evento.setDeleted(false);
+
         when(repository.findById(1L)).thenReturn(Optional.of(evento));
 
         EventoDTO dto = service.buscarPorId(1L);
 
-        assertNotNull(dto);
-        assertEquals("Titulo", dto.getTitle());
-        verify(repository).findById(1L);
+        assertEquals(1L, dto.getId());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoEventoNaoExiste() {
+        when(repository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> service.buscarPorId(99L));
+    }
+
+    @Test
+    void deveCriarNovoEvento() {
+        EventoDTO dto = new EventoDTO();
+        dto.setTitle("Evento Teste");
+
+        Evento evento = new Evento();
+        evento.setId(1L);
+        evento.setTitle("Evento Teste");
+
+        when(repository.save(any(Evento.class))).thenReturn(evento);
+
+        EventoDTO resultado = service.criarEvento(dto);
+
+        assertEquals("Evento Teste", resultado.getTitle());
     }
 }
