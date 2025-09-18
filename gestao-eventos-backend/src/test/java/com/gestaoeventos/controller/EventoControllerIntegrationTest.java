@@ -1,43 +1,42 @@
 package com.gestaoeventos.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.gestaoeventos.model.Evento;
+import com.gestaoeventos.repository.EventoRepository;
 
-import java.time.LocalDateTime;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.data.domain.Page;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
 
-import com.gestaoeventos.dto.EventoDTO;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@AutoConfigureMockMvc
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class EventoControllerIntegrationTest {
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private EventoRepository repository;
+
+    @BeforeEach
+    void setup() {
+        Evento evento = new Evento();
+        evento.setTitle("Evento Integração");
+        evento.setDeleted(false);
+        repository.save(evento);
+    }
 
     @Test
-    public void deveriaCriarEListarEventos() {
-        String baseUrl = "http://localhost:" + port + "/api/events";
-
-        EventoDTO novoEvento = new EventoDTO();
-        novoEvento.setTitle("Teste");
-        novoEvento.setDescription("Descrição");
-        novoEvento.setLocation("Local");
-        novoEvento.setEventDatetime(LocalDateTime.now().plusDays(1));
-
-        ResponseEntity<EventoDTO> response = restTemplate.postForEntity(baseUrl, novoEvento, EventoDTO.class);
-        assertEquals(201, response.getStatusCodeValue());
-
-        ResponseEntity<Page<EventoDTO>> pageResponse = restTemplate.getForEntity(baseUrl + "?page=0&size=10", (Class<Page<EventoDTO>>)(Object)Page.class);
-        assertTrue(pageResponse.getBody().getContent().size() > 0);
+    void deveRetornarEventoPorId() throws Exception {
+        mockMvc.perform(get("/api/events/1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.title").value("Evento Integração"));
     }
 }
