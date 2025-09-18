@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         String errors = ex.getBindingResult().getFieldErrors()
                 .stream()
-                .map(e -> e.getField() + ": " + e.getDefaultMessage())
+                .map(e -> e.getDefaultMessage())
                 .collect(Collectors.joining(", "));
 
         return ResponseEntity.badRequest().body(errors);

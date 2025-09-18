@@ -16,7 +16,7 @@ public class EventoDTO {
     @Size(max = 1000)
     private String description;
 
-    @FutureOrPresent(message = "eventDatetime: Deve ser uma data no presente ou no futuro")
+    @FutureOrPresent(message = "Deve ser uma data no presente ou no futuro")
     private LocalDateTime eventDatetime;
 
     @Size(max = 200)

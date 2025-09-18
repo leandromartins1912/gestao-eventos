@@ -72,9 +72,13 @@ export class EventFormComponent implements OnInit {
       next: () => this.router.navigate(['/events']),
       error: (errorResponse) => {
         console.log('Erro', errorResponse)
-        this.errorMessage = typeof errorResponse.error === 'string'
-          ? errorResponse.error
-          : 'Erro desconhecido no servidor.';
+         if (typeof errorResponse.error === 'string') {
+            this.errorMessage = errorResponse.error;
+          } else if (errorResponse.error?.message) {
+            this.errorMessage = errorResponse.error.message;
+          } else {
+            this.errorMessage = 'Erro desconhecido no servidor.';
+          }
         }
     });
   }
