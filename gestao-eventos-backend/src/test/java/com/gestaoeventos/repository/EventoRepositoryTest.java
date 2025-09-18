@@ -1,29 +1,42 @@
 package com.gestaoeventos.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
 import com.gestaoeventos.model.Evento;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class EventoRepositoryTest {
 
-	@Autowired
+    @Autowired
     private EventoRepository repository;
 
     @Test
-    public void deveriaSalvarEEncontrarEvento() {
-        Evento evento = new Evento(null, "Titulo", "Descrição", LocalDateTime.now());
+    void deveSalvarERecuperarEventoAtivo() {
+        Evento evento = new Evento();
+        evento.setTitle("Evento Ativo");
+        evento.setDeleted(false);
         repository.save(evento);
 
-        assertNotNull(evento.getId());
-        assertTrue(repository.findById(evento.getId()).isPresent());
+        var resultado = repository.findAllActive(PageRequest.of(0, 10));
+
+        assertFalse(resultado.isEmpty());
+        assertEquals("Evento Ativo", resultado.getContent().get(0).getTitle());
+    }
+
+    @Test
+    void naoDeveRetornarEventoDeletado() {
+        Evento evento = new Evento();
+        evento.setTitle("Evento Deletado");
+        evento.setDeleted(true);
+        repository.save(evento);
+
+        var resultado = repository.findAllActive(PageRequest.of(0, 10));
+
+        assertTrue(resultado.isEmpty());
     }
 }
